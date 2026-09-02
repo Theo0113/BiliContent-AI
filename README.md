@@ -6,12 +6,6 @@
 
 从B站视频/合集/UP主空间批量提取AI字幕，输出SRT/TXT/VTT/ASS/JSON五种格式，并通过LLM进一步精炼为排版字幕和结构化文章。
 
-[](https://www.python.org/downloads/)
-[](LICENSE)
-[](https://github.com/Theo0113/BiliContent-AI/stargazers)
-[](https://github.com/Theo0113/BiliContent-AI/issues)
-
-</div>
 
 ---
 
@@ -245,6 +239,3 @@ python generate_report.py eps.json ./字幕 -o 提取报告.html
 
 ---
 
-## ⭐ Star History
-
-[](https://star-history.com/#Theo0113/BiliContent-AI&Date)

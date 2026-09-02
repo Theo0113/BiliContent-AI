@@ -1,0 +1,8 @@
+{
+  "output_dir": "./字幕",
+  "formats": ["srt", "txt", "vtt", "ass", "json"],
+  "quality_check": true,
+  "separate_folders": true,
+  "ai_format": true,
+  "ai_article": true
+}

@@ -1,11 +1,16 @@
 # BiliContent AI 🎬
-
 <div align="center">
 
 **B站内容智能提取与AI知识精炼流水线**
 
-从B站视频/合集/UP主空间批量提取AI字幕，输出SRT/TXT/VTT/ASS/JSON五种格式，并通过LLM进一步精炼为排版字幕和结构化文章。
+从B站视频/合集/UP主空间批量提取AI字幕，输出SRT/TXT/VTT/ASS/JSON五种格式，并由执行Skill的AI Agent进一步精炼为排版字幕和结构化文章（零LLM API依赖）。
 
+[![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/github/license/Theo0113/BiliContent-AI.svg)](LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/Theo0113/BiliContent-AI.svg)](https://github.com/Theo0113/BiliContent-AI/stargazers)
+[![GitHub Issues](https://img.shields.io/github/issues/Theo0113/BiliContent-AI.svg)](https://github.com/Theo0113/BiliContent-AI/issues)
+
+</div>
 
 ---
 
@@ -24,13 +29,13 @@ B站上有大量优质的教学、评测、分享类视频内容，但这些内�
 
 ## ✨ 功能特性
 
-| 特性  | 说明  |
-| --- | --- |
+| 特性 | 说明 |
+|------|------|
 | **多源内容接入** | 支持单视频 / 合集 / UP主主页三种来源，自动解析视频列表 |
 | **智能分批策略** | 专为B站120秒授权窗口设计，分批提取+即时下载，高成功率 |
 | **质量检测修复** | 自动修复重叠时间轴、移除空白行、合并重复字幕 |
 | **多格式输出** | SRT / TXT / VTT / ASS / JSON五种格式，满足不同需求 |
-| **AI知识精炼** | 生成排版字幕（保留时间轴+修正格式）和精炼文章（去口水词+层级化） |
+| **AI知识精炼** | 生成排版字幕（保留时间轴+修正格式）和精炼文章（去口水词+层级化），由执行Skill的AI Agent完成，**无需LLM API依赖** |
 | **增量提取** | 已下载视频自动跳过，支持断点续提，不重复劳动 |
 | **可视化报告** | 自动生成HTML统计报告，包含成功率、字幕条数、总时长 |
 | **配置化输出** | 输出格式、质量检测、AI处理均可配置，适应不同场景 |
@@ -39,8 +44,8 @@ B站上有大量优质的教学、评测、分享类视频内容，但这些内�
 
 ## 🎯 适用场景
 
-| 场景  | 说明  |
-| --- | --- |
+| 场景 | 说明 |
+|------|------|
 | **内容创作者** | 分析竞品UP主的视频内容结构，生成文字稿 |
 | **产品经理** | 集中收集某款产品的B站评测视频，快速提取核心观点 |
 | **学习者** | 将教学视频的字幕导出为文章，便于复习和检索 |
@@ -68,7 +73,8 @@ B站上有大量优质的教学、评测、分享类视频内容，但这些内�
          ▼
 ┌─────────────────┐
 │  AI内容精炼器     │  排版字幕 → 结构化文章
-│  (LLM驱动)        │
+│  (由执行本Skill   │  无需LLM API依赖
+│   的AI直接完成)   │
 └────────┬────────┘
          │ AI排版字幕 / AI精炼文章
          ▼
@@ -141,7 +147,9 @@ python download_subtitles.py eps.json sub_urls.txt -o ./字幕 --config bili_con
 
 #### 4. AI内容精炼
 
-字幕下载完成后，对每个视频的TXT文件进行AI处理：
+> **零依赖设计**：此步骤不依赖任何 LLM API，由执行本 Skill 的 AI Agent（如 Trae、Claude、Cursor 等）直接读取 TXT 并完成精炼，详见 `SKILL.md` 步骤5。
+
+字幕下载完成后，AI Agent 对每个视频的TXT文件进行处理：
 
 - **排版字幕**：保留时间轴，修正标点，统一格式，分段清晰 → 输出到 `AI排版字幕/`
 - **精炼文章**：保留全部信息，去除口水词，按主题层级化组织 → 输出到 `AI精炼文章/`
@@ -173,8 +181,8 @@ python generate_report.py eps.json ./字幕 -o 提取报告.html
 }
 ```
 
-| 配置项 | 说明  |
-| --- | --- |
+| 配置项 | 说明 |
+|--------|------|
 | `output_dir` | 输出目录 |
 | `formats` | 需要输出的字幕格式 |
 | `quality_check` | 是否启用质量检测（修复重叠、合并重复、移除空白） |
@@ -205,8 +213,8 @@ python generate_report.py eps.json ./字幕 -o 提取报告.html
 
 ## ❓ 常见问题
 
-| 问题  | 原因  | 处理  |
-| --- | --- | --- |
+| 问题 | 原因 | 处理 |
+|------|------|------|
 | 403 Forbidden | auth_key过期 | 重新提取该批URL |
 | 返回空字幕 | 该视频没有AI字幕 | 标记 NOSUBS 跳过 |
 | 搜索无结果 | 关键词不匹配 | 尝试模糊搜索或换关键词 |
@@ -215,8 +223,8 @@ python generate_report.py eps.json ./字幕 -o 提取报告.html
 
 ## 💡 技术亮点
 
-| 亮点  | 说明  |
-| --- | --- |
+| 亮点 | 说明 |
+|------|------|
 | **分批抗过期策略** | B站字幕URL的auth_key有效期仅2分钟，设计分批提取+即时下载机制，保证高成功率 |
 | **AI语义处理** | 利用AI的自然语言理解能力处理字幕内容，而非规则匹配，适应各种语言风格 |
 | **增量无损** | 已下载视频自动跳过，支持断点续提，不重复劳动 |
@@ -239,3 +247,6 @@ python generate_report.py eps.json ./字幕 -o 提取报告.html
 
 ---
 
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Theo0113/BiliContent-AI&type=Date)](https://star-history.com/#Theo0113/BiliContent-AI&Date)
